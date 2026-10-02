@@ -78,6 +78,7 @@ def chat():
     if not message:
         return jsonify({'error': 'Mensagem vazia.'}), 400
         jai_emotional_core.experience(curiosity=0.02, bond=0.01)
+        emotional_state = jai_emotional_core.snapshot()
     session_id = str(body.get('session_id') or uuid.uuid4())[:80]
     session = SQLiteSession(f'web-{session_id}', str(DB))
     try:
