@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAI 🤖</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #09090b;
+      color: #f5f5f7;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    header {
+      padding: 32px 20px 20px;
+      border-bottom: 1px solid #29292f;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .status {
+      color: #9b9ba7;
+      font-size: 16px;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #35d49a;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .tab {
+      border: 1px solid #35353f;
+      background: #18181e;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: white;
+      color: #111;
+    }
+
+    main {
+      max-width: 800px;
+      margin: auto;
+      padding: 28px 20px 130px;
+    }
+
+    .card {
+      background: #18181e;
+      border: 1px solid #303038;
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 23px;
+    }
+
+    .card p {
+      color: #aaaab5;
+      line-height: 1.55;
+      font-size: 17px;
+      margin-bottom: 0;
+    }
+
+    #messages {
+      margin-top: 20px;
+    }
+
+    .message {
+      padding: 15px 17px;
+      border-radius: 18px;
+      margin: 10px 0;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .user {
+      background: #2b2b34;
+      margin-left: 40px;
+    }
+
+    .jai {
+      background: #18181e;
+      border: 1px solid #303038;
+      margin-right: 40px;
+    }
+
+    .composer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(9, 9, 11, 0.96);
+      border-top: 1px solid #29292f;
+      padding: 12px;
+    }
+
+    .composer-inner {
+      max-width: 800px;
+      margin: auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      background: #111116;
+      color: white;
+      border: 1px solid #303038;
+      border-radius: 18px;
+      padding: 15px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    button.send {
+      background: #157cff;
+      color: white;
+      border: none;
+      border-radius: 18px;
+      padding: 0 20px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    #quotes {
+      display: none;
+    }
+
+    .quote {
+      background: #18181e;
+      border: 1px solid #303038;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+
+    .muted {
+      color: #9999a5;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>JAI 🤖</h1>
+
+  <div class="status">
+    <span class="dot"></span>
+    Agente de IA · modo simulação
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showChat(this)">
+      Chat
+    </button>
+
+    <button class="tab" onclick="showQuotes(this)">
+      Orçamentos
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <section id="chat">
+
+    <div class="card">
+      <h2>Olá, eu sou a JAI.</h2>
+
+      <p>
+        Sou uma agente de IA para serviços digitais.
+        Posso entender o que você precisa, propor um trabalho
+        e negociar um orçamento.
+        Nesta versão, nenhum pagamento é real.
+      </p>
+    </div>
+
+    <div id="messages"></div>
+
+  </section>
+
+  <section id="quotes">
+
+    <div class="card">
+      <h2>Orçamentos</h2>
+
+      <p>
+        Os orçamentos simulados criados pela JAI
+        aparecerão aqui durante os testes.
+      </p>
+    </div>
+
+    <div class="quote">
+      <strong>Modo demonstração</strong>
+      <p class="muted">
+        Nenhum pagamento real é solicitado ou processado.
+      </p>
+    </div>
+
+  </section>
+
+</main>
+
+<div class="composer">
+
+  <div class="composer-inner">
+
+    <input
+      id="input"
+      type="text"
+      placeholder="Fale com a JAI..."
+      autocomplete="off"
+    >
+
+    <button
+      class="send"
+      onclick="sendMessage()"
+    >
+      Enviar
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+  function showChat(button) {
+    document.getElementById("chat").style.display = "block";
+    document.getElementById("quotes").style.display = "none";
+
+    document.querySelectorAll(".tab")
+      .forEach(x => x.classList.remove("active"));
+
+    button.classList.add("active");
+  }
+
+
+  function showQuotes(button) {
+    document.getElementById("chat").style.display = "none";
+    document.getElementById("quotes").style.display = "block";
+
+    document.querySelectorAll(".tab")
+      .forEach(x => x.classList.remove("active"));
+
+    button.classList.add("active");
+  }
+
+
+  function addMessage(text, type) {
+
+    const messages = document.getElementById("messages");
+
+    const div = document.createElement("div");
+
+    div.className = "message " + type;
+    div.textContent = text;
+
+    messages.appendChild(div);
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth"
+    });
+  }
+
+
+  async function sendMessage() {
+
+    const input = document.getElementById("input");
+
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    addMessage(message, "user");
+
+    input.value = "";
+
+    try {
+
+      const response = await fetch("/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: message
+        })
+      });
+
+      const data = await response.json();
+
+      const answer =
+        data.reply ||
+        data.response ||
+        data.message ||
+        "Recebi sua mensagem.";
+
+      addMessage(answer, "jai");
+
+    } catch (error) {
+
+      addMessage(
+        "A JAI ainda não está conectada ao servidor. Vamos configurar isso na próxima etapa.",
+        "jai"
+      );
+
+    }
+  }
+
+
+  document
+    .getElementById("input")
+    .addEventListener("keydown", function(event) {
+
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+
+    });
+
+</script>
+
+</body>
+</html>
