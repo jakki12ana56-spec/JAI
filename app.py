@@ -4,7 +4,7 @@ import uuid
 from pathlib import Path
 from flask import Flask, jsonify, render_template, request
 from agents import Agent, Runner, SQLiteSession, function_tool
-
+from emotion import jai_emotional_core
 BASE = Path(__file__).parent
 DATA = BASE / 'sales.jsonl'
 DB = BASE / 'jai_memory.db'
