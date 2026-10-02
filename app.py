@@ -83,7 +83,7 @@ def chat():
         result = Runner.run_sync(jai, message, session=session)
         return jsonify({'reply': result.final_output, 'session_id': session_id})
     except Exception as exc:
-print("ERRO REAL DA JAI:", repr(exc), flush=True)
+        print("ERRO REAL DA JAI:", repr(exc), flush=True)
         return jsonify({'error': f'Não foi possível responder: {exc}'}), 500
 
 @app.get('/api/quotes')
