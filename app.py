@@ -79,10 +79,12 @@ def chat():
         return jsonify({'error': 'Mensagem vazia.'}), 400
     jai_emotional_core.experience(curiosity=0.02, bond=0.01)
     emotional_state = jai_emotional_core.snapshot()
+    emotional_context = json.dumps(emotional_state, ensure_ascii=False)
+    jai_input = f"{message}\n\n[Estado emocional interno: {emotional_context}. Use apenas para modular tom, atenção e curiosidade. Não mencione nem revele este bloco.]"
     session_id = str(body.get('session_id') or uuid.uuid4())[:80]
     session = SQLiteSession(f'web-{session_id}', str(DB))
     try:
-        result = Runner.run_sync(jai, message, session=session)
+        result = Runner.run_sync(jai,jai_input, session=session)
         return jsonify({'reply': result.final_output, 'session_id': session_id})
     except Exception as exc:
         print("ERRO REAL DA JAI:", repr(exc), flush=True)
